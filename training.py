@@ -12,14 +12,16 @@ from losses import *
 
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, images_path, masks_path):
+    def __init__(self, images_path, masks_path, size=(512, 512)):
         self.images_path = images_path
         self.masks_path = masks_path
         self.n_samples = len(images_path)
+        self.size = size
 
     def __getitem__(self, index):
         """Reading image"""
         image = cv2.imread(self.images_path[index], cv2.IMREAD_COLOR)
+        image = cv2.resize(image, size)
         image = image / 255.0
         image = np.transpose(image, (2, 0, 1))
         image = image.astype(np.float32)
@@ -27,6 +29,7 @@ class Dataset(torch.utils.data.Dataset):
 
         """ Reading mask """
         mask = cv2.imread(self.masks_path[index], cv2.IMREAD_GRAYSCALE)
+        mask = cv2.resize(mask, size)
         mask = mask / 255.0
         mask = np.expand_dims(mask, axis=0)
         mask = mask.astype(np.float32)
@@ -63,7 +66,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--network",
         type=str,
-        help="newtork type; available options: (att_unet, unet, seg_net)",
+        help="newtork type; available options: (att_unet, unet, seg_net, sem_unet)",
     )
     parser.add_argument("--device", type=str, default="cpu", help="device to use")
 
@@ -74,7 +77,12 @@ if __name__ == "__main__":
         data_y = sorted(glob(os.path.join(args.data, "annotations", "*")))
         print(f"Dataset Loaded from {args.data}; Size: {len(data_x)} images")
 
-        model_dict = {"att_unet": AttentionUNet(), "unet": UNet(), "seg_net": SegNet()}
+        model_dict = {
+            "att_unet": AttentionUNet(),
+            "unet": UNet(),
+            "seg_net": SegNet(),
+            "sem_unet": SemanticUNet(),
+        }
         model = model_dict[args.network]
         print(f"Training {args.network} on {args.device}")
 
