@@ -57,12 +57,7 @@ if __name__ == "__main__":
     parser.add_argument("--device", type=str, default="cpu", help="device to use")
     parser.add_argument("--checkpt", type=str, help="path to checkpoint .pth file")
 
-    model_dict = {
-        "att_unet": AttentionUNet(),
-        "unet": UNet(),
-        "seg_net": SegNet(),
-        "sem_unet": SemanticUNet(),
-    }
+    model_dict = {"att_unet": AttentionUNet(), "unet": UNet(), "seg_net": SegNet()}
 
     args = parser.parse_args()
 

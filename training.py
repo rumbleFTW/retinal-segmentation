@@ -3,9 +3,11 @@ import cv2
 import numpy as np
 
 import os
+from pathlib import Path
 import argparse
-from tqdm import tqdm
 from glob import glob
+
+from tqdm import tqdm
 
 from models import *
 from losses import *
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--network",
         type=str,
-        help="newtork type; available options: (att_unet, unet, seg_net, sem_unet)",
+        help="newtork type; available options: (att_unet, unet, seg_net)",
     )
     parser.add_argument("--device", type=str, default="cpu", help="device to use")
 
@@ -77,12 +79,7 @@ if __name__ == "__main__":
         data_y = sorted(glob(os.path.join(args.data, "annotations", "*")))
         print(f"Dataset Loaded from {args.data}; Size: {len(data_x)} images")
 
-        model_dict = {
-            "att_unet": AttentionUNet(),
-            "unet": UNet(),
-            "seg_net": SegNet(),
-            "sem_unet": SemanticUNet(),
-        }
+        model_dict = {"att_unet": AttentionUNet(), "unet": UNet(), "seg_net": SegNet()}
         model = model_dict[args.network]
         print(f"Training {args.network} on {args.device}")
 
@@ -114,13 +111,21 @@ if __name__ == "__main__":
     loss_fn = DiceBCELoss()
 
     best_train_loss = float("inf")
-    if not os.path.exists("./checkpts"):
-        os.mkdir("./checkpts")
-    checkpoint_path = f"checkpts/{args.network}.pth"
+
+    count = 1
+    path = os.path.join("runs", "train", f"exp{count}")
+    while os.path.exists(path):
+        path = os.path.join("runs", "train", f"exp{count}")
+        count += 1
+
+    Path(path).mkdir(parents=True, exist_ok=True)
+    file_path = os.path.join(path, f"{args.network}-{id(args.network)}.pth")
+    f = open(file_path, "w")
+    f.close()
     for epoch in tqdm(range(num_epochs)):
         train_loss = train(model, data_loader, optimizer, loss_fn, device)
 
         """ Saving the model """
         if train_loss < best_train_loss:
             best_train_loss = train_loss
-            torch.save(model.state_dict(), checkpoint_path)
+            torch.save(model.state_dict(), file_path)

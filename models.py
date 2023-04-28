@@ -95,48 +95,6 @@ class SegNet(nn.Module):
         return outputs
 
 
-class SemanticUNet(nn.Module):
-    def __init__(self, in_c=3, out_c=1):
-        super().__init__()
-
-        """ Encoder """
-        self.e1 = Conv(in_c, 64)
-        self.e2 = Conv(64, 128)
-        self.e3 = Conv(128, 256)
-        self.e4 = Conv(256, 512)
-
-        """ Bottleneck """
-        self.b = Conv(512, 1024)
-
-        """ Decoder """
-        self.d1 = UpConv(1024, 512)
-        self.d2 = UpConv(512, 256)
-        self.d3 = UpConv(256, 128)
-        self.d4 = UpConv(128, 64)
-
-        """ Classifier """
-        self.outputs = nn.Conv2d(64, out_c, kernel_size=1, padding=0)
-
-    def forward(self, x):
-        """Encoder"""
-        s1 = self.e1(x)
-        s2 = self.e2(nn.functional.max_pool2d(s1, kernel_size=2, stride=2))
-        s3 = self.e3(nn.functional.max_pool2d(s2, kernel_size=2, stride=2))
-        s4 = self.e4(nn.functional.max_pool2d(s3, kernel_size=2, stride=2))
-
-        """ Bottleneck """
-        b = self.b(nn.functional.max_pool2d(s4, kernel_size=2, stride=2))
-
-        """ Decoder """
-        d1 = self.d1(b)
-        d2 = self.d2(cat([d1, s4], dim=1))
-        d3 = self.d3(cat([d2, s3], dim=1))
-        d4 = self.d4(cat([d3, s2], dim=1))
-
-        outputs = self.outputs(cat([d4, s1], dim=1))
-        return outputs
-
-
 class AttentionUNet(nn.Module):
     def __init__(self, in_c=3, out_c=1):
         super().__init__()

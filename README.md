@@ -26,7 +26,7 @@ python training.py --data /path/to/data --network att_unet --device cuda
 **Arguments**
 
 - `--data`: (required) The path to the data folder.
-- `--network`: (required) The network type to use. Available options are `att_unet`, `unet`, `seg_net` & `sem_unet`.
+- `--network`: (required) The network type to use. Available options are `att_unet`, `unet` &, `seg_net`.
 - `--device`: (optional) The device to use. Default is `cpu`.
 
 **Example**
@@ -48,6 +48,6 @@ python test_network.py --img /path/to/image.jpg --network unet --device cpu --ch
 **Arguments**
 
 - `--img`: (required) the path to the image to test.
-- `--network`: (required) the type of neural network to use for testing. Available options include att_unet, unet, seg_net, and sem_unet.
+- `--network`: (required) the type of neural network to use for testing. Available options include att_unet, unet, and seg_net
 - `--device`: (optional) the device to use for testing, default is "cpu".
 - `--checkpt`: (required) the path to the checkpoint .pth file.
