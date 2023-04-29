@@ -119,7 +119,7 @@ if __name__ == "__main__":
         count += 1
 
     Path(path).mkdir(parents=True, exist_ok=True)
-    file_path = os.path.join(path, f"{args.network}-{id(args.network)}.pth")
+    file_path = os.path.join(path, f"{args.network}-weights.pth")
     f = open(file_path, "w")
     f.close()
     for epoch in tqdm(range(num_epochs)):

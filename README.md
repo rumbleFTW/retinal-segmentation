@@ -1,18 +1,34 @@
 # Retinal Blood-Vessel Segmentation
 
+![](./media/sample.png)
+
 ## **Running on local machine**
 
-To use the models, clone the repository and navigate to the root directory.
+To set up the project, you will need to have Python 3.7 or above and Poetry installed on your machine.
+
+Clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/rumbleFTW/retinal-segmentation.git
 cd retinal-segmentation
 ```
 
-Install necessary modules
+Navigate to the project directory:
 
 ```bash
-pip install -r requirements.txt
+cd poetry-project
+```
+
+Install the dependencies using Poetry:
+
+```
+poetry install
+```
+
+Once the dependencies are installed, you can activate the venv by using the following command:
+
+```bash
+poetry shell
 ```
 
 ## **Training**

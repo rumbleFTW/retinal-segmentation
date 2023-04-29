@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+import cv2
+
 import torch
 import cv2
 import numpy as np
@@ -39,10 +43,19 @@ def test(model, checkpt, impath, device="cpu"):
     x = x.to(device)
 
     pred = model(x)
+    count = 1
+    path = os.path.join("runs", "test", f"exp{count}")
+    while os.path.exists(path):
+        path = os.path.join("runs", "test", f"exp{count}")
+        count += 1
+    Path(path).mkdir(parents=True, exist_ok=True)
+    file_path = os.path.join(path, f"test-output.jpg")
+    f = open(file_path, "w")
+    f.close()
     plt.imsave(
-        "./runs/test.png",
+        file_path,
         pred.detach().numpy()[0][0],
-        cmap="Greys_r",
+        cmap="gray",
     )
 
 
