@@ -1,6 +1,6 @@
 # Retinal Blood-Vessel Segmentation
 
-![](./media/sample.png)
+![sample](https://github.com/rumbleFTW/retinal-segmentation/assets/85807431/0cb61689-8441-4d5a-a21b-0ae88ce7d251)
 
 ## **Running on local machine**
 
@@ -50,7 +50,7 @@ python training.py --data /path/to/data --network att_unet --device cuda
 Here's an example of training an `AttentionUNet` Network on `cuda`:
 
 ```bash
-python training.py --data ./DRIVE --network att_unet --device cuda
+python training.py --data .data/DRIVE --network att_unet --device cuda
 ```
 
 ## **Testing**
