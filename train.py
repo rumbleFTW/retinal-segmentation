@@ -125,7 +125,6 @@ if __name__ == "__main__":
     for epoch in tqdm(range(num_epochs)):
         train_loss = train(model, data_loader, optimizer, loss_fn, device)
 
-        """ Saving the model """
         if train_loss < best_train_loss:
             best_train_loss = train_loss
             torch.save(model.state_dict(), file_path)

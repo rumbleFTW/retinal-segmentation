@@ -1,11 +1,10 @@
 import os
 from pathlib import Path
-import cv2
 
-import torch
 import cv2
-import numpy as np
+import torch
 import matplotlib.pyplot as plt
+import numpy as np
 import argparse
 
 from models import *
@@ -28,8 +27,7 @@ def evaluate(model, loader, loss_fn, device):
     return epoch_loss
 
 
-def test(model, checkpt, impath, device="cpu"):
-    model = model
+def infer(model, checkpt, impath, device="cpu"):
     model = model.to(torch.device(device))
     model.load_state_dict(torch.load(checkpt, map_location=device))
 
@@ -42,26 +40,26 @@ def test(model, checkpt, impath, device="cpu"):
     x = torch.from_numpy(x)
     x = x.to(device)
 
-    pred = model(x)
+    pred = model(x).detach().numpy()[0][0]
     count = 1
-    path = os.path.join("runs", "test", f"exp{count}")
+    path = os.path.join("runs", "infer", f"exp{count}")
     while os.path.exists(path):
-        path = os.path.join("runs", "test", f"exp{count}")
+        path = os.path.join("runs", "infer", f"exp{count}")
         count += 1
     Path(path).mkdir(parents=True, exist_ok=True)
-    file_path = os.path.join(path, f"test-output.jpg")
-    f = open(file_path, "w")
-    f.close()
+    file_path = os.path.join(path, "infer.jpg")
+    pred[pred > 0] = 255
+    pred[pred < 0] = 0
     plt.imsave(
         file_path,
-        pred.detach().numpy()[0][0],
+        pred,
         cmap="gray",
     )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--img", type=str, help="path to image to test")
+    parser.add_argument("--img", type=str, help="path to image to infer")
     parser.add_argument(
         "--network",
         type=str,
@@ -75,7 +73,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        test(
+        infer(
             model=model_dict[args.network],
             checkpt=args.checkpt,
             impath=args.img,

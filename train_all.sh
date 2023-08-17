@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-cmd="python training.py --device cuda"
+cmd="python train.py --device cuda"
 
 networks=("unet" "att_unet" "seg_net")
 

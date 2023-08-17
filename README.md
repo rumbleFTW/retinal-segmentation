@@ -36,7 +36,7 @@ poetry shell
 To train models, run the following command in the terminal:
 
 ```bash
-python training.py --data /path/to/data --network att_unet --device cuda
+python train.py --data /path/to/data --network att_unet --device cuda
 ```
 
 **Arguments**
@@ -50,15 +50,15 @@ python training.py --data /path/to/data --network att_unet --device cuda
 Here's an example of training an `AttentionUNet` Network on `cuda`:
 
 ```bash
-python training.py --data .data/DRIVE --network att_unet --device cuda
+python train.py --data ./data/DRIVE --network att_unet --device cuda
 ```
 
-## **Testing**
+## **Inference**
 
-To test images, run the following command in the terminal:
+To inference on images, run the following command in the terminal:
 
 ```bash
-python test_network.py --img /path/to/image.jpg --network unet --device cpu --checkpt /path/to/checkpoint.pth
+python infer.py --img /path/to/image.jpg --network unet --device cpu --checkpt /path/to/checkpoint.pth
 ```
 
 **Arguments**
@@ -66,4 +66,18 @@ python test_network.py --img /path/to/image.jpg --network unet --device cpu --ch
 - `--img`: (required) the path to the image to test.
 - `--network`: (required) the type of neural network to use for testing. Available options include att_unet, unet, and seg_net
 - `--device`: (optional) the device to use for testing, default is "cpu".
+- `--checkpt`: (required) the path to the checkpoint .pth file.
+
+## **Testing**
+
+To test models on a dataset, run the following command in the terminal:
+
+```bash
+python test.py --data /path/to/data --network att_unet --device cuda
+```
+
+**Arguments**
+
+- `--data`: (required) The path to the data folder.
+- `--network`: (required) The network type to use. Available options are `att_unet`, `unet` &, `seg_net`.
 - `--checkpt`: (required) the path to the checkpoint .pth file.
