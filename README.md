@@ -16,7 +16,7 @@ cd retinal-segmentation
 Navigate to the project directory:
 
 ```bash
-cd poetry-project
+cd retinal-segmentation
 ```
 
 Install the dependencies using Poetry:
