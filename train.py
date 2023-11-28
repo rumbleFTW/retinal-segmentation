@@ -23,7 +23,7 @@ class Dataset(torch.utils.data.Dataset):
     def __getitem__(self, index):
         """Reading image"""
         image = cv2.imread(self.images_path[index], cv2.IMREAD_COLOR)
-        image = cv2.resize(image, size)
+        image = cv2.resize(image, self.size)
         image = image / 255.0
         image = np.transpose(image, (2, 0, 1))
         image = image.astype(np.float32)
@@ -31,7 +31,7 @@ class Dataset(torch.utils.data.Dataset):
 
         """ Reading mask """
         mask = cv2.imread(self.masks_path[index], cv2.IMREAD_GRAYSCALE)
-        mask = cv2.resize(mask, size)
+        mask = cv2.resize(mask, self.size)
         mask = mask / 255.0
         mask = np.expand_dims(mask, axis=0)
         mask = mask.astype(np.float32)
