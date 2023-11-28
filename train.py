@@ -101,7 +101,6 @@ if __name__ == "__main__":
     data_loader = torch.utils.data.DataLoader(
         dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=2
     )
-    device = torch.device("cuda")
     model = model.to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
