@@ -72,7 +72,8 @@ class Metrics:
     @staticmethod
     def test(model, data_dir, checkpt):
         model = model
-        model.load_state_dict(torch.load(checkpt))
+        #model.load_state_dict(torch.load(checkpt)) //uncomment this line for CUDA testing
+        model.load_state_dict(torch.load(checkpt, map_location=torch.device('cpu')))
         print(checkpt)
         iou_scores = []
         dice_scores = []
