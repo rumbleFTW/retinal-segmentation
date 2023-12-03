@@ -73,7 +73,7 @@ python infer.py --img /path/to/image.jpg --network unet --device cpu --checkpt /
 To test models on a dataset, run the following command in the terminal:
 
 ```bash
-python test.py --data /path/to/data --network att_unet --device cuda
+python test.py --data /path/to/data --network att_unet --checkpt /path/to/checkpoint.pth
 ```
 
 **Arguments**
