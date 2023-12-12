@@ -19,16 +19,10 @@ Navigate to the project directory:
 cd retinal-segmentation
 ```
 
-Install the dependencies using Poetry:
+Install the dependencies:
 
 ```
-poetry install
-```
-
-Once the dependencies are installed, you can activate the venv by using the following command:
-
-```bash
-poetry shell
+pip install -r requirements.txt
 ```
 
 ## **Training**
@@ -81,3 +75,11 @@ python test.py --data /path/to/data --network att_unet --checkpt /path/to/checkp
 - `--data`: (required) The path to the data folder.
 - `--network`: (required) The network type to use. Available options are `att_unet`, `unet` &, `seg_net`.
 - `--checkpt`: (required) the path to the checkpoint .pth file.
+
+## **Gradio demo**
+
+Place checkpoints in the directory `checkpts` under the name: `att_unet-weights.pth`, `seg_net-weights.pth`, `unet-weights.pth`
+
+```python
+  python gradio_demo.py
+```
