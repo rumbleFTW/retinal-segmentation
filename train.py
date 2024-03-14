@@ -1,6 +1,8 @@
 import torch
+from torchvision.utils import make_grid
 import cv2
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 
 import os
 from pathlib import Path
@@ -45,7 +47,6 @@ class Dataset(torch.utils.data.Dataset):
 
 def train(model, loader, optimizer, loss_fn, device):
     epoch_loss = 0.0
-
     model.train()
     for x, y in loader:
         x = x.to(device, dtype=torch.float32)
@@ -93,7 +94,7 @@ if __name__ == "__main__":
     W = 512
     size = (H, W)
     batch_size = 2
-    num_epochs = 50
+    num_epochs = 100
     lr = 1e-4
 
     dataset = Dataset(data_x, data_y)
@@ -104,9 +105,7 @@ if __name__ == "__main__":
     model = model.to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, "min", patience=5, verbose=True
-    )
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, "min", patience=5)
     loss_fn = DiceBCELoss()
 
     best_train_loss = float("inf")
@@ -121,9 +120,21 @@ if __name__ == "__main__":
     file_path = os.path.join(path, f"{args.network}-weights.pth")
     f = open(file_path, "w")
     f.close()
+    global_step = 0
+    writer = SummaryWriter(os.path.join("runs", "train", f"exp{count}"))
     for epoch in tqdm(range(num_epochs)):
         train_loss = train(model, data_loader, optimizer, loss_fn, device)
-
+        writer.add_scalar("Training loss", train_loss, global_step=global_step)
         if train_loss < best_train_loss:
+            real = next(iter(data_loader))[0]
+            real = real.to(device, dtype=torch.float32)
+            with torch.no_grad():
+                generated = model(real)
+            writer.add_image(
+                f"Generated",
+                make_grid(generated),
+                global_step=global_step,
+            )
             best_train_loss = train_loss
             torch.save(model.state_dict(), file_path)
+        global_step += 1
