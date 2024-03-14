@@ -94,7 +94,7 @@ if __name__ == "__main__":
     W = 512
     size = (H, W)
     batch_size = 2
-    num_epochs = 100
+    num_epochs = 25
     lr = 1e-4
 
     dataset = Dataset(data_x, data_y)
@@ -126,13 +126,19 @@ if __name__ == "__main__":
         train_loss = train(model, data_loader, optimizer, loss_fn, device)
         writer.add_scalar("Training loss", train_loss, global_step=global_step)
         if train_loss < best_train_loss:
-            real = next(iter(data_loader))[0]
-            real = real.to(device, dtype=torch.float32)
+            x, y = next(iter(data_loader))
+            x = x[0].to(device, dtype=torch.float32).unsqueeze(dim=0)
+            y = y[0].to(device, dtype=torch.float32).unsqueeze(dim=0)
             with torch.no_grad():
-                generated = model(real)
+                generated = model(x)
             writer.add_image(
-                f"Generated",
-                make_grid(generated),
+                f"Fundus vs Mask vs Generated",
+                make_grid(
+                    torch.cat(
+                        (x, y.expand(-1, 3, -1, -1), generated.expand(-1, 3, -1, -1)),
+                        dim=0,
+                    )
+                ),
                 global_step=global_step,
             )
             best_train_loss = train_loss
